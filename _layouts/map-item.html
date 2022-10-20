@@ -130,27 +130,113 @@ async function mapData(){
         // Get features at point click
         const features = map.queryRenderedFeatures(e.point, {layers: ['Data Layer Values']});
          // Limit the number of properties we're displaying for legibility and performance
+	    
+	    //listener copied from template
+	    // add listener
+      var coll = document.getElementsByClassName("collapsible");
+      var i;
+
+      for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var content = this.nextElementSibling;
+          if (content.style.maxHeight){
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+          }
+        });
+      }
+      console.log(document.getElementById('features') )
+
+      var featuress = document.getElementById('features')
+      
+      var coll2 = featuress.getElementsByClassName("collapsible");
+      var i;
+
+      for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var content = this.nextElementSibling;
+          if (content.style.maxHeight){
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+          }
+        });
+      }
+      
        
         // Create the table
 
-        function makeTable (json) {
-            var tbl = ('<table width = 100%><tr>');
-            for (var key in features[0].properties){
-                tbl = tbl+'<th>'+key+'</th>';
-            };
-            tbl = tbl + '</tr>'
-            for (var i = 0; i < features.length; i++) {
-                tbl = tbl+"<tr>"
-                // var keys = Object.keys(obj);
-                for (var key in features[i].properties)
-                    tbl = tbl+("<td>" + features[i].properties[key] + "</td>");
-                    // tr = tr+("<td>" + json[i].properties.label + "</td>");
-                    // tr = tr+("<td>" + json[i].properties.label + "</td>");
-                tbl = tbl+"</tr>"
-            };
-            tbl = tbl +'</table>';
-            return tbl;
-            }
+      function makeTable (rArray) {
+                 var tbl = ('<table width = 100%><tr>');
+             
+                 //create header
+                var display = "<button  type=\"button\" class=\"collapseHeader\"><table><tr>  <th>Label</th> <th> Title</th> <th>Date Published</th><th>  </th></tr> </table></button> ";
+                 var curLabel;
+                 var curTitle;
+                 var curDate;
+                 
+
+                 //enclose it in a scrollable thing?? (idk how)
+       //for loop to create all the collapsible stuff
+      for (var i = 0; i < rArray.length; i++) {
+        //rArray.length!!!
+        curLabel = "";
+        
+        curTitle = "";
+        
+        curDate = "";
+        
+        //make sure they have titles etc before adding them
+        if (rArray[i].properties.label) {
+          curLabel = rArray[i].properties.label;
+          
+        }
+        if (rArray[i].properties.title) {
+          curTitle = rArray[i].properties.title;
+        }
+        if (rArray[i].properties.datePub) {
+          curDate = rArray[i].properties.datePub;
+        }
+        
+        //create title info  
+        var str1 = "<button  type=\"button\" class=\"collapsible\"><table><tr>  <th> "
+        var str2 = "</th> <th>"
+          display = display + str1 + curLabel +str2 + curTitle + "</th> <th>" + curDate + "</th>"
+         
+        //add image link
+        if (rArray[i].properties.websiteUrl) {
+          display = display + "<th><a href=\" " +rArray[i].properties.websiteUrl + "\" ><button class=\"btn-blue\">Map</button></a></th>"
+        }
+        
+        display = display+ "</tr> </table></button> "
+        
+        //add info to dropdown
+        display = display + "<div class=\"content\">"
+         for (var key in rArray[i].properties) {
+           var info;
+           
+           if (key== "websiteUrl" || key == "download") {
+             info = "<a href=\" " + rArray[i].properties[key] + "\">" + rArray[i].properties[key]+ " </a>"
+             
+                 display = display + "<span>"+ key +":   " + info + "</span> <br>" ;
+           } else {
+             info = rArray[i].properties[key]
+                 display = display + "<p>"+ key +":   " + info + "</p> " ;
+           }
+      
+           
+           
+         }
+
+                
+           display = display+ "</div>"      
+         }
+    
+        console.log(display)
+              return display }
 
         // document.getElementById('features').innerHTML = displayFeatures[0].properties //makeTable(displayFeatures)
         document.getElementById('features').innerHTML = makeTable()
@@ -168,6 +254,66 @@ async function mapData(){
 mapData();
 
 </script>
+	
+	<style>
+        /* Style the button that is used to open and close the collapsible content */
+      
+      table { 
+      table-layout: fixed;
+      }
+      
+      th,td { 
+      width: "30%";
+      overflow: hidden
+      }
+      .collapsible {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+      }
+      .collapseHeader {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+      }
+
+        .collapsible:after {
+        content: '\02795'; /* Unicode character for "plus" sign (+) */
+        font-size: 13px;
+        color: white;
+        float: right;
+        margin-left: 5px;
+      }
+
+      .active:after {
+        content: "\2796"; /* Unicode character for "minus" sign (-) */
+      }
+
+      /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+      .active, .collapsible:hover {
+        background-color: #ccc;
+      }
+
+      /* Style the collapsible content. Note: hidden by default */
+      .content {
+        padding: 0 18px;
+
+        overflow: hidden;
+        background-color: #444;
+      }
+    </style>
  
 </body>
 </html>
