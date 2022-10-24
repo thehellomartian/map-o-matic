@@ -3,33 +3,33 @@ layout: default
 ---
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-<link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
-<!-- Import Turf Module - Needed to calculate bounding boxes -->
-<script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/main.css">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <!-- Import Turf Module - Needed to calculate bounding boxes -->
+    <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
 </head>
-<body>
 
+<body>
+    <div class="mapinfowrapper">
+        <span class="mapinfo">Scale {{ page.scale }}</span>
+        <span class="mapinfo">Years {{ page.years_published }}</span>
+        <span class="mapinfo">{{ page.nosheets }} map sheets</span>
+    </div>
+    <h1 class="page-heading">{{ page.title }}</h1>
+    <a href="{{ page.infourl }}" class="buttonlink">More info</a>
+    <button id="zoomto" class="btn-control">Reset map</button>
     <div class="mapcontainer">
-        <div class="flex space-x-2 ">
-            <span class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-nord1 text-white rounded-full">Scale {{ page.scale }}</span>
-            <span class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-nord7 text-white rounded-full">Years {{ page.years_published }}</span>
-            <span class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-nord10 text-white rounded-full">{{ page.nosheets }} map sheets</span>
-          </div>
-        <h1>{{ page.title }}</h1>
-        <a href="{{ page.infourl }}"><button class="btn-light">More info</button></a>
         <div id="map"></div>
-        <button id="zoomto" class="btn-blue">Reset map</button>
     </div>
     <div class="featurecontainer">
         <div id="features"></div>
     </div>
 
-<pre id="json"></pre>
 <script>
 	mapboxgl.accessToken = '{{ site.mapbox-access-token }}';
 
